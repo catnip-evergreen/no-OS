@@ -13,14 +13,14 @@
 
 # modified it to include only libraries relevant to ad9144, modified by Prerna Baranwal for KCU116 and AD9144  
 
-SRCS += $(PROJECT)/src/app/fmcdac.c					
+SRCS += $(PROJECT)/src/app/fmcdac.c		
+SRCS +=	$(DRIVERS)/frequency/ad9516/ad9516.c			
 SRCS += $(DRIVERS)/axi_core/axi_dac_core/axi_dac_core.c \
 	$(DRIVERS)/axi_core/axi_dmac/axi_dmac.c \
 	$(DRIVERS)/axi_core/clk_axi_clkgen/clk_axi_clkgen.c \
 	$(DRIVERS)/axi_core/jesd204/axi_adxcvr.c \
 	$(DRIVERS)/axi_core/jesd204/axi_jesd204_tx.c \
 	$(DRIVERS)/axi_core/jesd204/xilinx_transceiver.c \
-	$(DRIVERS)/frequency/ad9516/ad9516.c \
 	$(DRIVERS)/dac/ad9144/ad9144.c \
 	$(DRIVERS)/api/no_os_spi.c \
 	$(DRIVERS)/api/no_os_gpio.c \
@@ -55,8 +55,8 @@ INCS += $(DRIVERS)/axi_core/axi_dac_core/axi_dac_core.h \
 	$(DRIVERS)/axi_core/jesd204/axi_adxcvr.h \
 	$(DRIVERS)/axi_core/jesd204/axi_jesd204_tx.h \
 	$(DRIVERS)/axi_core/jesd204/xilinx_transceiver.h \
+	$(DRIVERS)/io-expander/demux_spi.h \
 	$(DRIVERS)/frequency/ad9516/ad9516.h \
-	$(DRIVERS)/frequency/ad9516/ad9516_cfg.h\
 	$(DRIVERS)/dac/ad9144/ad9144.h					
 INCS +=	$(PLATFORM_DRIVERS)/$(PLATFORM)_spi.h \
 	$(PLATFORM_DRIVERS)/$(PLATFORM)_gpio.h
@@ -80,14 +80,4 @@ INCS += $(INCLUDE)/no_os_fifo.h \
 	$(DRIVERS)/axi_core/iio_axi_dac/iio_axi_dac.h
 endif
 
-
-# $(DRIVERS)/axi_core/axi_adc_core/axi_adc_core.c 
-# 	$(DRIVERS)/axi_core/jesd204/axi_jesd204_rx.c 
-#  	$(DRIVERS)/adc/ad9680/ad9680.c 
-#  	$(DRIVERS)/adc/ad9680/iio_ad9680.c 
-# 	$(DRIVERS)/adc/ad9680/iio_ad9680.c 
-# 	$(DRIVERS)/adc/ad9680/iio_ad9680.c 
-#   	$(DRIVERS)/adc/ad9680/iio_ad9680.c 
-# 	$(DRIVERS)/adc/ad9680/iio_ad9680.c 
-# 	$(DRIVERS)/adc/ad9680/iio_ad9680.c 
-# 	$(DRIVERS)/axi_core/iio_axi_adc/iio_axi_adc.h 
+#$(DRIVERS)/frequency/ad9516/ad9516.c problematic!!

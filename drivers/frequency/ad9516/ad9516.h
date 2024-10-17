@@ -45,6 +45,7 @@
 /******************************************************************************/
 #include <stdint.h>
 #include "no_os_spi.h"
+//#include "ad9516_cfg.h"
 
 /******************************************************************************/
 /****************************** AD9516 ****************************************/
@@ -337,6 +338,12 @@ struct ad9516_platform_data {
 
 	/* External Clock or VCO selection */
 	int32_t vco_clk_sel;
+	/* output channel configuration */
+
+	int32_t num_channels;
+	// pointer to channel array
+	struct ad9516_lvpecl_channel_spec *channels;
+
 
 	uint8_t power_down_vco_clk;
 	uint8_t name[16];
@@ -405,6 +412,7 @@ struct ad9516_dev {
 	/* Device Settings */
 	struct ad9516_state ad9516_st;
 	enum ad9516_type	ad9516_type;
+	struct ad9516_platform_data	     *pdata;
 };
 
 struct ad9516_init_param {
@@ -413,6 +421,7 @@ struct ad9516_init_param {
 	/* Device Settings */
 	struct ad9516_state ad9516_st;
 	enum ad9516_type	ad9516_type;
+	struct ad9516_platform_data	     *pdata;
 };
 
 /******************************************************************************/
@@ -420,7 +429,7 @@ struct ad9516_init_param {
 /******************************************************************************/
 /*! Initializes the AD9516. */
 int32_t ad9516_setup(struct ad9516_dev **device,
-		     struct ad9516_init_param init_param);
+		      struct ad9516_init_param *init_param);
 /*! Free the resources allocated by ad9516_setup(). */
 int32_t ad9516_remove(struct ad9516_dev *dev);
 /*!  Writes data into a register. */
@@ -448,5 +457,7 @@ int32_t ad9516_phase(struct ad9516_dev *dev,
 int32_t ad9516_power_mode(struct ad9516_dev *dev,
 			  int32_t channel,
 			  int32_t mode);
+//int32_t ad9516_init(struct ad9516_init_param *init_param);
+
 
 #endif // __AD9516_H__

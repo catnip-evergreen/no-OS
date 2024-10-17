@@ -903,3 +903,91 @@ TRACE::2024-09-26.18:26:11::SCWMssOS::DEBUG:  swdes dump  C:/Users/fpga_/Desktop
 
 TRACE::2024-09-26.18:26:11::SCWMssOS::Sw design exists and opened at  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
 TRACE::2024-09-26.18:26:11::SCWMssOS::Removing the swdes entry for  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to open the hw design at C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA directory C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:31::SCWPlatform::Do not have an existing db opened. 
+TRACE::2024-10-16.19:18:31::SCWPlatform::Opened new HwDB with name system_top_2
+TRACE::2024-10-16.19:18:31::SCWReader::Active system found as  kcu105
+TRACE::2024-10-16.19:18:31::SCWReader::Handling sysconfig kcu105
+TRACE::2024-10-16.19:18:31::SCWDomain::checking for install qemu data   : 
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to open the hw design at C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA directory C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to set the existing hwdb with name system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Opened existing hwdb system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Found the Hw Db part of the input DSA
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to open the hw design at C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA directory C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to set the existing hwdb with name system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Opened existing hwdb system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Found the Hw Db part of the input DSA
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to open the hw design at C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA directory C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to set the existing hwdb with name system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Opened existing hwdb system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Found the Hw Db part of the input DSA
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to open the hw design at C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA directory C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to set the existing hwdb with name system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Opened existing hwdb system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Found the Hw Db part of the input DSA
+TRACE::2024-10-16.19:18:31::SCWMssOS::Checking the sw design at  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::DEBUG:  swdes dump  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/system_top/sys_mb/standalone_sys_mb/bsp/system.mss|system||
+
+TRACE::2024-10-16.19:18:31::SCWMssOS::No sw design opened at  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::mss exists loading the mss file  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::Opened the sw design from mss  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::Adding the swdes entry C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss with des name system_0
+TRACE::2024-10-16.19:18:31::SCWMssOS::updating the scw layer about changes
+TRACE::2024-10-16.19:18:31::SCWMssOS::Opened the sw design.  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::Saving the mss changes C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::Found a swdesign opened with the mssfile.
+TRACE::2024-10-16.19:18:31::SCWMssOS::Completed writemss as part of save.
+TRACE::2024-10-16.19:18:31::SCWMssOS::Commit changes completed.
+TRACE::2024-10-16.19:18:31::SCWReader::Adding prebuilt librarypaths as   
+TRACE::2024-10-16.19:18:31::SCWReader::Adding prebuilt incpaths  as   
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to open the hw design at C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform::DSA directory C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:31::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:31::SCWPlatform::Trying to set the existing hwdb with name system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Opened existing hwdb system_top_2
+TRACE::2024-10-16.19:18:31::SCWPlatform::Found the Hw Db part of the input DSA
+TRACE::2024-10-16.19:18:31::SCWMssOS::Checking the sw design at  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWMssOS::DEBUG:  swdes dump  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss|system_0||
+C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/system_top/sys_mb/standalone_sys_mb/bsp/system.mss|system||
+
+TRACE::2024-10-16.19:18:31::SCWMssOS::Sw design exists and opened at  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:31::SCWReader::No isolation master present  
+TRACE::2024-10-16.19:18:37::SCWPlatform::Clearing the existing platform
+TRACE::2024-10-16.19:18:37::SCWSystem::Clearing the existing sysconfig
+TRACE::2024-10-16.19:18:37::SCWMssOS::Removing the swdes entry for  C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/sys_mb/standalone_sys_mb/bsp/system.mss
+TRACE::2024-10-16.19:18:37::SCWSystem::Clearing the domains completed.
+TRACE::2024-10-16.19:18:37::SCWPlatform::Clearing the opened hw db.
+TRACE::2024-10-16.19:18:37::SCWPlatform::DSA given C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:37::SCWPlatform::DSA absoulate path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:37::SCWPlatform:: Platform location is C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw
+TRACE::2024-10-16.19:18:37::SCWPlatform:: Platform Path C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa
+TRACE::2024-10-16.19:18:37::SCWPlatform:: Unique name xilinx:kcu105::0.0
+TRACE::2024-10-16.19:18:37::SCWPlatform::Removing the HwDB with name C:/Users/fpga_/Desktop/adi/no-OS/projects/fmcdaq2/kcu105/hw/system_top.xsa

@@ -18,3 +18,5 @@ platform generate -domains
 platform active {kcu105}
 platform generate -quick
 bsp reload
+platform active {kcu105}
+catch {platform remove kcu105}

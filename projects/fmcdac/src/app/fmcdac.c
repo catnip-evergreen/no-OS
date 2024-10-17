@@ -90,7 +90,7 @@ struct fmcdac_dev {
 	struct ad9144_dev *ad9144_device;
 	//struct ad9680_dev *ad9680_device;
 
-	struct ad9516_channel_spec ad9516_channels[4];
+	struct ad9516_lvpecl_channel_spec ad9516_channels[4];
 
 	struct no_os_gpio_desc *gpio_clkd_sync;
 	struct no_os_gpio_desc *gpio_dac_reset;
@@ -177,6 +177,7 @@ static int fmcdac_gpio_init(struct fmcdac_dev *dev)
 		.number = GPIO_DAC_TXEN,
 		.platform_ops = &xil_gpio_ops
 	};
+
 //	struct no_os_gpio_init_param gpio_adc_pd_param = {
 //		.number = GPIO_ADC_PD,
 //		.platform_ops = &xil_gpio_ops
@@ -254,7 +255,7 @@ static int fmcdac_gpio_init(struct fmcdac_dev *dev)
 	if (status < 0)
 		return status;
 
-//	return no_os_gpio_set_value(dev->gpio_adc_pd, NO_OS_GPIO_LOW);
+	return 0;
 }
 
 static int fmcdac_spi_init(struct fmcdac_init_param *dev_init)
@@ -331,21 +332,28 @@ static int fmcdac_clk_init(struct fmcdac_dev *dev,
 	ad9516_pdata.num_channels = 4;
 	ad9516_pdata.channels = &dev->ad9516_channels[0];
 	dev_init->ad9516_param.pdata = &ad9516_pdata;
-
-	ret = ad9516_init(&dev_init->ad9516_param);
+	ret = ad9516_setup(&dev->ad9516_device,&dev_init->ad9516_param);
 	if (ret < 0) {
 		printf("\nClock init failed");
 		return ret;
 	}
 
-	dev->ad9516_channels[DAC_DEVICE_CLK].channel_num = 1;
-	dev->ad9516_channels[DAC_DEVICE_CLK].channel_divider = 1;
-	dev->ad9516_channels[DAC_DEVICE_SYSREF].channel_num = 7;
-	dev->ad9516_channels[DAC_DEVICE_SYSREF].channel_divider = 128;
-	dev->ad9516_channels[DAC_FPGA_CLK].channel_num = 9;
-	dev->ad9516_channels[DAC_FPGA_CLK].channel_divider = 2;
-	dev->ad9516_channels[DAC_FPGA_SYSREF].channel_num = 8;
-	dev->ad9516_channels[DAC_FPGA_SYSREF].channel_divider = 128;
+	dev->ad9516_channels[DAC_DEVICE_CLK].channel_num = 0;
+	dev->ad9516_channels[DAC_DEVICE_CLK].out_invert_en = 0;
+    dev->ad9516_channels[DAC_DEVICE_CLK].out_diff_voltage= LVPECL_780mV;
+
+
+	dev->ad9516_channels[DAC_DEVICE_SYSREF].channel_num = 1;
+	dev->ad9516_channels[DAC_DEVICE_SYSREF].out_invert_en = 0;
+    dev->ad9516_channels[DAC_DEVICE_SYSREF].out_diff_voltage= LVPECL_780mV;
+
+	dev->ad9516_channels[DAC_FPGA_CLK].channel_num = 2;
+	dev->ad9516_channels[DAC_FPGA_CLK].out_invert_en = 0;
+	dev->ad9516_channels[DAC_FPGA_CLK].out_diff_voltage= LVPECL_780mV;
+
+	dev->ad9516_channels[DAC_FPGA_SYSREF].channel_num = 3;
+	dev->ad9516_channels[DAC_FPGA_SYSREF].out_invert_en = 0;
+	dev->ad9516_channels[DAC_FPGA_SYSREF].out_diff_voltage= LVPECL_780mV;
 
 	// adc device-clk-sysref, fpga-clk-sysref
 	//dev->ad9523_channels[ADC_DEVICE_CLK].channel_num = 13;
@@ -357,6 +365,20 @@ static int fmcdac_clk_init(struct fmcdac_dev *dev,
 	//dev->ad9523_channels[ADC_FPGA_SYSREF].channel_num = 5;
 	//dev->ad9523_channels[ADC_FPGA_SYSREF].channel_divider = 128;
 	// VCXO 125MHz
+	  	ad9516_pdata.ref_1_freq = 30720000; // may need to change this later on 
+		ad9516_pdata.ref_2_freq = 0;
+		ad9516_pdata.diff_ref_en = 0;
+		ad9516_pdata.ref_1_power_on = 1;
+		ad9516_pdata.ref_2_power_on = 0;
+		ad9516_pdata.ref_sel_pin_en = 0;
+		ad9516_pdata.ref_sel_pin = 1;
+		ad9516_pdata.ref_2_en = 0;
+		ad9516_pdata.ext_clk_freq = 0;
+		ad9516_pdata.int_vco_freq = 1250000000;
+		ad9516_pdata.vco_clk_sel = 1;
+		ad9516_pdata.power_down_vco_clk = 0;
+
+	/*
 	ad9516_pdata.vcxo_freq = 125000000;
 	ad9516_pdata.spi3wire = 1;
 	ad9516_pdata.osc_in_diff_en = 1;
@@ -370,7 +392,7 @@ static int fmcdac_clk_init(struct fmcdac_dev *dev,
 	ad9516_pdata.rpole2 = 0;
 	ad9516_pdata.rzero = 7;
 	ad9516_pdata.cpole1 = 2;
-
+*/
 	return ret;
 }
 // TODO: modified the jesd204 platform to include only ad9144
@@ -502,8 +524,8 @@ static int fmcdac_altera_pll_setup()
 		.parent_rate = 500000 * 1000
 	};
 
-	/* Initialize A10 FPLLs */
-	/*
+	Initialize A10 FPLLs 
+	
 	status = altera_a10_fpll_init(&ad9680_device_clk_pll,
 				      &ad9680_device_clk_pll_param);
 	if (status != 0) {
@@ -618,8 +640,8 @@ static int fmcdac_trasnceiver_setup(struct fmcdac_dev *dev,
 //	}
 //#endif
 //
-//	return status;
-//}
+	return status;
+}
 
 
 static int fmcdac_test(struct fmcdac_dev *dev,
@@ -875,7 +897,7 @@ int fmcdac_reconfig(struct ad9144_init_param *p_ad9144_param,
 	case '5':
 		printf("5 - DAC 2000 MSPS (2x interpolation)\n");
 		/* REF clock = 100 MHz */
-		p_ad9516_param->channels[DAC_DEVICE_CLK].channel_divider = 10;
+		//p_ad9516_param->channels[DAC_DEVICE_CLK].channel_divider = 10;
 		p_ad9144_param->pll_ref_frequency_khz = 100000;
 
 		/* DAC at 2 GHz using the internal PLL and 2 times interpolation */
@@ -887,15 +909,15 @@ int fmcdac_reconfig(struct ad9144_init_param *p_ad9144_param,
 		break;
 	case '4':
 		printf ("DAC  600 MSPS\n");
-		p_ad9516_param->pll2_vco_diff_m1 = 5;
-		(&p_ad9516_param->channels[DAC_FPGA_CLK])->
-		channel_divider = 2;
-		(&p_ad9516_param->channels[DAC_DEVICE_CLK])->
-		channel_divider = 1;
-		(&p_ad9516_param->channels[DAC_DEVICE_SYSREF])->
-		channel_divider = 128;
-		(&p_ad9516_param->channels[DAC_FPGA_SYSREF])->
-		channel_divider = 128;
+		//p_ad9516_param->pll2_vco_diff_m1 = 5;
+		//(&p_ad9516_param->channels[DAC_FPGA_CLK])->
+		//channel_divider = 2;
+		//(&p_ad9516_param->channels[DAC_DEVICE_CLK])->
+		//channel_divider = 1;
+		//(&p_ad9516_param->channels[DAC_DEVICE_SYSREF])->
+		//channel_divider = 128;
+		//(&p_ad9516_param->channels[DAC_FPGA_SYSREF])->
+		//channel_divider = 128;
 		//(&p_ad9516_param->channels[ADC_FPGA_CLK])->
 		//channel_divider = 2;
 		//(&p_ad9523_param->channels[ADC_DEVICE_CLK])->
@@ -930,15 +952,15 @@ int fmcdac_reconfig(struct ad9144_init_param *p_ad9144_param,
 		break;
 	case '3':
 		printf ("3 - DAC  500 MSPS\n");
-		p_ad9516_param->pll2_vco_diff_m1 = 3;
-		(&p_ad9516_param->channels[DAC_FPGA_CLK])->
-		channel_divider = 4;
-		(&p_ad9516_param->channels[DAC_DEVICE_CLK])->
-		channel_divider = 2;
-		(&p_ad9516_param->channels[DAC_DEVICE_SYSREF])->
-		channel_divider = 256;
-		(&p_ad9516_param->channels[DAC_FPGA_SYSREF])->
-		channel_divider = 256;
+		//p_ad9516_param->pll2_vco_diff_m1 = 3;
+		//(&p_ad9516_param->channels[DAC_FPGA_CLK])->
+		//channel_divider = 4;
+		//(&p_ad9516_param->channels[DAC_DEVICE_CLK])->
+		//channel_divider = 2;
+		//(&p_ad9516_param->channels[DAC_DEVICE_SYSREF])->
+		//channel_divider = 256;
+		//(&p_ad9516_param->channels[DAC_FPGA_SYSREF])->
+		//channel_divider = 256;
 		//(&p_ad9523_param->channels[ADC_FPGA_CLK])->
 		//channel_divider = 4;
 		//(&p_ad9523_param->channels[ADC_DEVICE_CLK])->
@@ -973,15 +995,15 @@ int fmcdac_reconfig(struct ad9144_init_param *p_ad9144_param,
 		break;
 	case '2':
 		printf ("2 - DAC 1000 MSPS\n");
-		p_ad9516_param->pll2_vco_diff_m1 = 3;
-		(&p_ad9516_param->channels[DAC_FPGA_CLK])->
-		channel_divider = 2;
-		(&p_ad9516_param->channels[DAC_DEVICE_CLK])->
-		channel_divider = 1;
-		(&p_ad9523_param->channels[DAC_DEVICE_SYSREF])->
-		channel_divider = 128;
-		(&p_ad9523_param->channels[DAC_FPGA_SYSREF])->
-		channel_divider = 128;
+		//p_ad9516_param->pll2_vco_diff_m1 = 3;
+		//(&p_ad9516_param->channels[DAC_FPGA_CLK])->
+		//channel_divider = 2;
+		//(&p_ad9516_param->channels[DAC_DEVICE_CLK])->
+		//channel_divider = 1;
+		//(&p_ad9523_param->channels[DAC_DEVICE_SYSREF])->
+		//channel_divider = 128;
+		//(&p_ad9523_param->channels[DAC_FPGA_SYSREF])->
+		//channel_divider = 128;
 		//(&p_ad9523_param->channels[ADC_FPGA_CLK])->
 		//channel_divider = 4;
 		//(&p_ad9523_param->channels[ADC_DEVICE_CLK])->
@@ -1089,7 +1111,7 @@ static int fmcdac_setup(struct fmcdac_dev *dev,
 			 &dev_init->ad9144_xcvr_param,
 			 //&dev_init->ad9680_param,
 			 //&dev_init->ad9680_xcvr_param,
-			 &dev_init->ad9516_param.pdata);
+			 dev_init->ad9516_param.pdata);
 
 	status = fmcdac_dac_init(&fmcdac, &fmcdac_init);
 	if (status < 0)
@@ -1121,9 +1143,9 @@ static int fmcdac_setup(struct fmcdac_dev *dev,
 	// Both sequences are interleaved here so that the transceivers which might
 	// be shared between the DAC and ADC link are enabled at the same time.
 
-	status = fmcdac_altera_pll_setup();
-	if (status != 0)
-		return status;
+	//status = fmcdac_altera_pll_setup();
+	//if (status != 0)
+//		return status;
 
 //#ifdef JESD_FSM_ON
 //	status = ad9680_setup_jesd_fsm(&dev->ad9680_device, &dev_init->ad9680_param);
@@ -1275,12 +1297,12 @@ int main(void)
 	struct jesd204_topology_dev devs_tx[] = {
 		{
 			.jdev = fmcdac.ad9144_jesd->jdev,
-			.link_ids = {2},
+			.link_ids = {1},
 			.links_number = 1,
 		},
 		{
 			.jdev = fmcdac.ad9144_device->jdev,
-			.link_ids = {2},
+			.link_ids = {1},
 			.links_number = 1,
 			.is_top_device = true,
 		},
