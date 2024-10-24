@@ -56,7 +56,6 @@
  *
  * @return Returns 0 in case of success or negative error code.
 *******************************************************************************/
-
 int32_t ad9516_setup(struct ad9516_dev **device,
 		     struct ad9516_init_param *init_param)
 {
@@ -76,140 +75,162 @@ int32_t ad9516_setup(struct ad9516_dev **device,
 	};
 
 	dev = (struct ad9516_dev *)malloc(sizeof(*dev));
-	if (!dev)
+	if (!dev) {
+		printf("Memory allocation for 'dev' failed.\n");
 		return -1;
+	}
 
 	dev->ad9516_st = init_param->ad9516_st;
 	dev->ad9516_type = init_param->ad9516_type;
 
 	/* Initializes the SPI peripheral */
 	ret = no_os_spi_init(&dev->spi_desc, &init_param->spi_init);
-	if (ret)
+	if (ret) {
+		printf("SPI initialization failed with error code: %d\n", ret);
 		return ret;
+	}
+
+	printf("Reading PART ID from register address: 0x%X\n", AD9516_REG_PART_ID);
+    ret = ad9516_read(dev, AD9516_REG_PART_ID, &reg_value);
+    if (ret) {
+    printf("Failed to read PART ID register. Error code: %d\n", ret);
+    return ret;
+    }
+printf("PART ID read: 0x%X\n", reg_value);
 
 	ret = ad9516_read(dev, AD9516_REG_PART_ID, &reg_value);
-	if (ret)
+	if (ret) {
+		printf("Failed to read PART ID register. Error code: %d\n", ret);
 		return ret;
-	if (reg_value != dev->ad9516_type)
+	}
+	if (reg_value != dev->ad9516_type) {
+		printf("PART ID mismatch. Expected: 0x%X, Got: 0x%X\n", dev->ad9516_type, reg_value);
 		return -EFAULT;
+	}
 
-	/* Configure serial port for long instructions and reset the serial
-	 * interface. */
-	ret = ad9516_write(dev,
-			   AD9516_REG_SERIAL_PORT_CONFIG,
-			   AD9516_SOFT_RESET | AD9516_LONG_INSTRUCTION);
-	if(ret < 0)
+	/* Configure serial port for long instructions and reset the serial interface. */
+	ret = ad9516_write(dev, AD9516_REG_SERIAL_PORT_CONFIG, AD9516_SOFT_RESET | AD9516_LONG_INSTRUCTION);
+	if (ret < 0) {
+		printf("Failed to write to SERIAL PORT CONFIG register. Error code: %d\n", ret);
 		return ret;
+	}
 	ret = ad9516_update(dev);
-	if(ret < 0)
+	if (ret < 0) {
+		printf("Failed to update serial port configuration. Error code: %d\n", ret);
 		return ret;
+	}
+
 	/* Clear AD9516_SOFT_RESET bit to complete reset operation. */
-	ret = ad9516_write(dev,
-			   AD9516_REG_SERIAL_PORT_CONFIG,
-			   AD9516_LONG_INSTRUCTION);
-	if(ret < 0)
+	ret = ad9516_write(dev, AD9516_REG_SERIAL_PORT_CONFIG, AD9516_LONG_INSTRUCTION);
+	if (ret < 0) {
+		printf("Failed to clear SOFT_RESET bit. Error code: %d\n", ret);
 		return ret;
+	}
 	ret = ad9516_update(dev);
-	if(ret < 0)
+	if (ret < 0) {
+		printf("Failed to update serial port configuration after clearing reset. Error code: %d\n", ret);
 		return ret;
+	}
+
 	/* Selects the PLL reference mode. */
 	reg_value = dev->ad9516_st.pdata->diff_ref_en * AD9516_DIFF_REF |
-		    dev->ad9516_st.pdata->ref_1_power_on *
-		    AD9516_REF1_POWER_ON |
-		    dev->ad9516_st.pdata->ref_2_power_on *
-		    AD9516_REF2_POWER_ON |
-		    dev->ad9516_st.pdata->ref_sel_pin_en *
-		    AD9516_USE_REF_SEL_PIN |
+		    dev->ad9516_st.pdata->ref_1_power_on * AD9516_REF1_POWER_ON |
+		    dev->ad9516_st.pdata->ref_2_power_on * AD9516_REF2_POWER_ON |
+		    dev->ad9516_st.pdata->ref_sel_pin_en * AD9516_USE_REF_SEL_PIN |
 		    dev->ad9516_st.pdata->ref_2_en * AD9516_SELECT_REF2;
-	ret = ad9516_write(dev,
-			   AD9516_REG_PLL_CTRL_7,
-			   reg_value);
-	if(ret < 0)
+
+	ret = ad9516_write(dev, AD9516_REG_PLL_CTRL_7, reg_value);
+	if (ret < 0) {
+		printf("Failed to write PLL reference mode. Error code: %d\n", ret);
 		return ret;
+	}
+
 	/* Select CLK input. */
 	reg_value = dev->ad9516_st.pdata->vco_clk_sel * AD9516_SEL_VCO_CLK |
-		    dev->ad9516_st.pdata->power_down_vco_clk *
-		    AD9516_POWER_DOWN_VCO_CLK;
-	ret = ad9516_write(dev,
-			   AD9516_REG_INPUT_CLKS,
-			   reg_value);
-	if(ret < 0)
+		    dev->ad9516_st.pdata->power_down_vco_clk * AD9516_POWER_DOWN_VCO_CLK;
+
+	ret = ad9516_write(dev, AD9516_REG_INPUT_CLKS, reg_value);
+	if (ret < 0) {
+		printf("Failed to select CLK input. Error code: %d\n", ret);
 		return ret;
-	/* Update the device with user settings for the LVPECL output
-	 * channels. */
-	for(index = 0; index < 4; index++) {
+	}
+
+	/* Update the device with user settings for the LVPECL output channels. */
+	for (index = 0; index < 4; index++) {
 		reg_address = lvepcl_out_ch[index];
 
-		reg_value = dev->
-			    ad9516_st.lvpecl_channels[index].out_invert_en *
-			    AD9516_OUT_LVPECL_INVERT |
-			    AD9516_OUT_LVPECL_DIFF_VOLTAGE(dev->ad9516_st.
-					    lvpecl_channels[index].out_diff_voltage);
-		ret = ad9516_write(dev,
-				   reg_address,
-				   reg_value);
-		if(ret < 0)
+		reg_value = dev->ad9516_st.lvpecl_channels[index].out_invert_en * AD9516_OUT_LVPECL_INVERT |
+		            AD9516_OUT_LVPECL_DIFF_VOLTAGE(dev->ad9516_st.lvpecl_channels[index].out_diff_voltage);
+
+		ret = ad9516_write(dev, reg_address, reg_value);
+		if (ret < 0) {
+			printf("Failed to configure LVPECL output channel %d. Error code: %d\n", index, ret);
 			return ret;
+		}
 	}
-	/* Update the device with user settings for the LVDS/CMOS output
-	 * channels. */
-	for(index = 0; index < 4; index++) {
+
+	/* Update the device with user settings for the LVDS/CMOS output channels. */
+	for (index = 0; index < 4; index++) {
 		reg_address = AD9516_REG_LVDS_CMOS_OUT6 + index;
-		reg_value = AD9516_OUT_LVDS_CMOS_INVERT(
-				    dev->
-				    ad9516_st.lvds_cmos_channels[index].out_invert) |
-			    dev->
-			    ad9516_st.lvds_cmos_channels[index].logic_level *
-			    AD9516_OUT_LVDS_CMOS |
-			    dev->ad9516_st.lvds_cmos_channels[index].cmos_b_en *
-			    AD9516_OUT_CMOS_B |
-			    AD9516_OUT_LVDS_OUTPUT_CURRENT(dev->ad9516_st.
-					    lvds_cmos_channels[index].out_lvds_current);
-		ret = ad9516_write(dev,
-				   reg_address,
-				   reg_value);
-		if(ret < 0)
+		reg_value = AD9516_OUT_LVDS_CMOS_INVERT(dev->ad9516_st.lvds_cmos_channels[index].out_invert) |
+		            dev->ad9516_st.lvds_cmos_channels[index].logic_level * AD9516_OUT_LVDS_CMOS |
+		            dev->ad9516_st.lvds_cmos_channels[index].cmos_b_en * AD9516_OUT_CMOS_B |
+		            AD9516_OUT_LVDS_OUTPUT_CURRENT(dev->ad9516_st.lvds_cmos_channels[index].out_lvds_current);
+
+		ret = ad9516_write(dev, reg_address, reg_value);
+		if (ret < 0) {
+			printf("Failed to configure LVDS/CMOS output channel %d. Error code: %d\n", index, ret);
 			return ret;
+		}
 	}
+
 	/* Check if VCO is selected as input. */
-	if(dev->ad9516_st.pdata->vco_clk_sel) {
+	if (dev->ad9516_st.pdata->vco_clk_sel) {
 		/* Sets the VCO frequency. */
-		ad9516_vco_frequency(dev,
-				     dev->ad9516_st.pdata->int_vco_freq);
+		ad9516_vco_frequency(dev, dev->ad9516_st.pdata->int_vco_freq);
 
 		/* Activate PLL */
-		reg_value = AD9516_PLL_POWER_DOWN(0x0) |
-			    AD9516_CP_MODE (0x3) |
-			    AD9516_CP_CURRENT (0x7) |
-			    0 * AD9516_PFD_POLARITY;
+		reg_value = AD9516_PLL_POWER_DOWN(0x0) | AD9516_CP_MODE(0x3) | AD9516_CP_CURRENT(0x7) | 0 * AD9516_PFD_POLARITY;
 		ret = ad9516_write(dev, AD9516_REG_PFD_CHARGE_PUMP, reg_value);
-		if(ret < 0)
+		if (ret < 0) {
+			printf("Failed to activate PLL. Error code: %d\n", ret);
 			return ret;
+		}
 
 		/* Start VCO Calibration */
 		ret = ad9516_read(dev, AD9516_REG_PLL_CTRL_3, &reg_value);
-		if(ret < 0)
+		if (ret < 0) {
+			printf("Failed to read PLL control register for VCO calibration. Error code: %d\n", ret);
 			return ret;
+		}
 
 		reg_value &= ~AD9516_VCO_CAL_NOW;
 
 		ret = ad9516_write(dev, AD9516_REG_PLL_CTRL_3, reg_value);
-		if(ret < 0)
+		if (ret < 0) {
+			printf("Failed to clear VCO_CAL_NOW bit. Error code: %d\n", ret);
 			return ret;
+		}
 
 		ret = ad9516_update(dev);
-		if(ret < 0)
+		if (ret < 0) {
+			printf("Failed to update VCO calibration configuration. Error code: %d\n", ret);
 			return ret;
+		}
 
 		reg_value |= AD9516_VCO_CAL_NOW;
 
 		ret = ad9516_write(dev, AD9516_REG_PLL_CTRL_3, reg_value);
-		if(ret < 0)
+		if (ret < 0) {
+			printf("Failed to set VCO_CAL_NOW bit. Error code: %d\n", ret);
 			return ret;
+		}
 
 		ret = ad9516_update(dev);
-		if(ret < 0)
+		if (ret < 0) {
+			printf("Failed to complete VCO calibration update. Error code: %d\n", ret);
 			return ret;
+		}
 
 		/* Time to complete a VCO calibration (Table 29, datasheet). */
 		no_os_mdelay(88);
@@ -219,6 +240,7 @@ int32_t ad9516_setup(struct ad9516_dev **device,
 
 	return ret;
 }
+
 
 /***************************************************************************//**
  * @brief Free the resources allocated by ad9516_setup().

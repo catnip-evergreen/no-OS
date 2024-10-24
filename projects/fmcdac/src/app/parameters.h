@@ -58,7 +58,7 @@
 #define GPIO_OFFSET				0
 // modifying it for only dac 
 //#define ADC_DDR_BASEADDR			(XPAR_AXI_DDR_CNTRL_BASEADDR + 0x800000)
-#define DAC_DDR_BASEADDR			(XPAR_AXI_DDR_CNTRL_BASEADDR + 0x900000)
+#define DAC_DDR_BASEADDR			(XPAR_AXI_DDR_CNTRL_BASEADDR + 0x900000) // condition for microblaze
 #else
 #define SPI_DEVICE_ID				XPAR_XSPIPS_0_DEVICE_ID
 #define GPIO_DEVICE_ID				XPAR_XGPIOPS_0_DEVICE_ID
@@ -67,7 +67,7 @@
 
 #define INTC_DEVICE_ID				XPAR_SCUGIC_SINGLE_DEVICE_ID
 
-#ifdef PLATFORM_ZYNQMP
+#ifdef PLATFORM_ZYNQMP // not sure if this is required, I am assuming it will remain the same across, kcu105 or kcu116 TODO
 #define GPIO_OFFSET				78
 #else
 #define GPIO_OFFSET				54
@@ -135,6 +135,7 @@
 #define GPIO_CLKD_SYNC				(GPIO_OFFSET + 38)
 //#define GPIO_ADC_FDB				(GPIO_OFFSET + 36)
 #//define GPIO_ADC_FDA				(GPIO_OFFSET + 35)
+#define GPIO_SPI_EN                 (GPIO_OFFSET + 35)
 #define GPIO_DAC_IRQ				(GPIO_OFFSET + 34)
 #define GPIO_CLKD_STATUS_1			(GPIO_OFFSET + 33)
 #define GPIO_CLKD_STATUS_0			(GPIO_OFFSET + 32)

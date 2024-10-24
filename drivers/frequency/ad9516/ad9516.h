@@ -412,7 +412,7 @@ struct ad9516_dev {
 	/* Device Settings */
 	struct ad9516_state ad9516_st;
 	enum ad9516_type	ad9516_type;
-	struct ad9516_platform_data	     *pdata;
+	//struct ad9516_platform_data	     *pdata;
 };
 
 struct ad9516_init_param {
@@ -421,7 +421,7 @@ struct ad9516_init_param {
 	/* Device Settings */
 	struct ad9516_state ad9516_st;
 	enum ad9516_type	ad9516_type;
-	struct ad9516_platform_data	     *pdata;
+	//struct ad9516_platform_data	     *pdata;
 };
 
 /******************************************************************************/

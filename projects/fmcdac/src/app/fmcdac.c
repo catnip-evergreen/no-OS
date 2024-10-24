@@ -48,7 +48,7 @@
 #include "app_config.h"
 #include "parameters.h"
 #ifndef ALTERA_PLATFORM
-#include <xparameters.h>
+
 #include <xil_printf.h>
 #include <xil_cache.h>
 #include "axi_adxcvr.h"
@@ -259,20 +259,23 @@ static int fmcdac_gpio_init(struct fmcdac_dev *dev)
 }
 
 static int fmcdac_spi_init(struct fmcdac_init_param *dev_init)
-{
+{     // spc matches the 20 mhz, which is present in the data sheet  
+// max value is 25 Mhz  
 	/* Initialize SPI structures */
 	struct no_os_spi_init_param ad9516_spi_param = {
 		.device_id = SPI_DEVICE_ID,
 		.max_speed_hz = 2000000u,
-		.chip_select = 0,
-	.mode = NO_OS_SPI_MODE_0
+		.chip_select = 4,
+	.mode = NO_OS_SPI_MODE_0,
+	.platform_ops = &xil_spi_ops
 	};
 
 	struct no_os_spi_init_param ad9144_spi_param = {
 		.device_id = SPI_DEVICE_ID,
 		.max_speed_hz = 2000000u,
 		.chip_select = 1,
-		.mode = NO_OS_SPI_MODE_0
+		.mode = NO_OS_SPI_MODE_0,
+		.platform_ops = &xil_spi_ops
 	};
 
 //	struct no_os_spi_init_param ad9680_spi_param = {
@@ -317,6 +320,7 @@ static int fmcdac_spi_init(struct fmcdac_init_param *dev_init)
 	dev_init->ad9144_param.spi_init = ad9144_spi_param;
 //	dev_init->ad9680_param.spi_init = ad9680_spi_param;
 
+
 	return 0;
 }
 
@@ -331,13 +335,24 @@ static int fmcdac_clk_init(struct fmcdac_dev *dev,
 	/* clock distribution device (AD9516) configuration */
 	ad9516_pdata.num_channels = 4;
 	ad9516_pdata.channels = &dev->ad9516_channels[0];
-	dev_init->ad9516_param.pdata = &ad9516_pdata;
-	ret = ad9516_setup(&dev->ad9516_device,&dev_init->ad9516_param);
-	if (ret < 0) {
-		printf("\nClock init failed");
-		return ret;
-	}
-
+	dev_init->ad9516_param.ad9516_st.pdata = &ad9516_pdata;
+	dev_init->ad9516_param.ad9516_type = AD9516_1; // look into  the board and then change this , according to the specs sheet its ad9516-1
+	dev_init->ad9516_param.ad9516_st.lvpecl_channels = &dev->ad9516_channels[0];
+		// VCXO 125MHz
+	  	ad9516_pdata.ref_1_freq = 30720000; // may need to change this later on 
+		ad9516_pdata.ref_2_freq = 0;
+		ad9516_pdata.diff_ref_en = 0;
+		ad9516_pdata.ref_1_power_on = 1;
+		ad9516_pdata.ref_2_power_on = 0;
+		ad9516_pdata.ref_sel_pin_en = 0;
+		ad9516_pdata.ref_sel_pin = 1;
+		ad9516_pdata.ref_2_en = 0;
+		ad9516_pdata.ext_clk_freq = 0;
+		ad9516_pdata.int_vco_freq = 1250000000;
+		ad9516_pdata.vco_clk_sel = 1;
+		ad9516_pdata.power_down_vco_clk = 0;
+		//ad9516_pdata.name = "ad9516_lpc";
+		
 	dev->ad9516_channels[DAC_DEVICE_CLK].channel_num = 0;
 	dev->ad9516_channels[DAC_DEVICE_CLK].out_invert_en = 0;
     dev->ad9516_channels[DAC_DEVICE_CLK].out_diff_voltage= LVPECL_780mV;
@@ -355,6 +370,16 @@ static int fmcdac_clk_init(struct fmcdac_dev *dev,
 	dev->ad9516_channels[DAC_FPGA_SYSREF].out_invert_en = 0;
 	dev->ad9516_channels[DAC_FPGA_SYSREF].out_diff_voltage= LVPECL_780mV;
 
+	ret = ad9516_setup(&dev->ad9516_device,&dev_init->ad9516_param);
+	
+	if (ret < 0) {
+		printf("\nClock init failed");
+		return ret;
+	}
+
+	// TODO add tthe power mode??
+
+
 	// adc device-clk-sysref, fpga-clk-sysref
 	//dev->ad9523_channels[ADC_DEVICE_CLK].channel_num = 13;
 	//dev->ad9523_channels[ADC_DEVICE_CLK].channel_divider = 1;
@@ -364,19 +389,7 @@ static int fmcdac_clk_init(struct fmcdac_dev *dev,
 	//dev->ad9523_channels[ADC_FPGA_CLK].channel_divider = 2;
 	//dev->ad9523_channels[ADC_FPGA_SYSREF].channel_num = 5;
 	//dev->ad9523_channels[ADC_FPGA_SYSREF].channel_divider = 128;
-	// VCXO 125MHz
-	  	ad9516_pdata.ref_1_freq = 30720000; // may need to change this later on 
-		ad9516_pdata.ref_2_freq = 0;
-		ad9516_pdata.diff_ref_en = 0;
-		ad9516_pdata.ref_1_power_on = 1;
-		ad9516_pdata.ref_2_power_on = 0;
-		ad9516_pdata.ref_sel_pin_en = 0;
-		ad9516_pdata.ref_sel_pin = 1;
-		ad9516_pdata.ref_2_en = 0;
-		ad9516_pdata.ext_clk_freq = 0;
-		ad9516_pdata.int_vco_freq = 1250000000;
-		ad9516_pdata.vco_clk_sel = 1;
-		ad9516_pdata.power_down_vco_clk = 0;
+
 
 	/*
 	ad9516_pdata.vcxo_freq = 125000000;
@@ -1111,7 +1124,7 @@ static int fmcdac_setup(struct fmcdac_dev *dev,
 			 &dev_init->ad9144_xcvr_param,
 			 //&dev_init->ad9680_param,
 			 //&dev_init->ad9680_xcvr_param,
-			 dev_init->ad9516_param.pdata);
+			 dev_init->ad9516_param.ad9516_st.pdata);
 
 	status = fmcdac_dac_init(&fmcdac, &fmcdac_init);
 	if (status < 0)
